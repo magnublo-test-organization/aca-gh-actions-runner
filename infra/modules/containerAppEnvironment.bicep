@@ -40,7 +40,7 @@ output acaEnvName string = acaEnv.name
 
 // debugging outputs
 output acaEnvSubnetId string = empty(subnetId) ? 'emptySubnetId' : acaEnv.properties.vnetConfiguration.infrastructureSubnetId
-output vnetConfiguration object = acaEnv.properties.vnetConfiguration
+// output vnetConfiguration (object | null) = acaEnv.properties.vnetConfiguration
 output vnetConfigurationIf object = empty(subnetId) ? {} : {
   infrastructureSubnetId: subnetId
   internal: true
