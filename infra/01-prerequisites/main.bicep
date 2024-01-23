@@ -3,6 +3,7 @@ targetScope = 'subscription'
 @minLength(1)
 @description('Primary location for all resources')
 param location string
+param subnetId string = ''
 
 var project = 'aca-gh-runners'
 
@@ -25,6 +26,7 @@ module resources 'resources.bicep' = {
     location: location
     tags: union(tags, { module: '01-prerequisites/resources.bicep' })
     project: project
+    subnetId: subnetId
   }
 }
 

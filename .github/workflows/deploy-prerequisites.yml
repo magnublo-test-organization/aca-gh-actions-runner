@@ -2,6 +2,12 @@ name: Deploy prerequisites
 
 on:
   workflow_dispatch:
+    inputs:
+      containerAppEnvSubnetId:
+        description: Subnet ID for the Container App environment, if deploying to existing vnet
+        type: string
+        default: ""
+        required: false
 
 permissions:
   id-token: write
@@ -36,6 +42,7 @@ jobs:
           region: ${{ vars.AZURE_LOCATION }}
           parameters: >
             location=${{ vars.AZURE_LOCATION }}
+            subnetId=${{ github.event.inputs.containerAppEnvSubnetId }}
           deploymentName: deploy-aca-gh-runners-dev-prerequisites
 
       - name: Generate access token

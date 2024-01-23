@@ -3,6 +3,7 @@ param project string
 param tags {
   *: string
 }
+param subnetId string
 
 module acr '../modules/containerRegistry.bicep' = {
   name: 'deploy-${project}-acr'
@@ -29,6 +30,7 @@ module acaEnv '../modules/containerAppEnvironment.bicep' = {
     project: project
     tags: union(tags, { module: 'containerAppEnvironment.bicep' })
     lawName: law.outputs.lawName
+    subnetId: subnetId
   }
 }
 
