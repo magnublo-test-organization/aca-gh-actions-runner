@@ -29,7 +29,7 @@ resource acaEnv 'Microsoft.App/managedEnvironments@2023-05-01' = {
       }
     }
     // vnetConfiguration is included if subnetId is non-empty
-    vnetConfiguration: empty(subnetId) ? null : {
+    vnetConfiguration: empty(subnetId) ? {} : {
       infrastructureSubnetId: subnetId
       internal: true
     }
@@ -37,3 +37,11 @@ resource acaEnv 'Microsoft.App/managedEnvironments@2023-05-01' = {
 }
 
 output acaEnvName string = acaEnv.name
+
+// debugging outputs
+output acaEnvSubnetId string = empty(subnetId) ? 'emptySubnetId' : acaEnv.properties.vnetConfiguration.infrastructureSubnetId
+output vnetConfiguration object = acaEnv.properties.vnetConfiguration
+output vnetConfigurationIf object = empty(subnetId) ? {} : {
+  infrastructureSubnetId: subnetId
+  internal: true
+}
