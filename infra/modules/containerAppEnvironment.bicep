@@ -39,9 +39,12 @@ resource acaEnv 'Microsoft.App/managedEnvironments@2023-05-01' = {
 output acaEnvName string = acaEnv.name
 
 // debugging outputs
-output acaEnvSubnetId string = empty(subnetId) ? 'emptySubnetId' : acaEnv.properties.vnetConfiguration.infrastructureSubnetId
+// output acaEnvSubnetId string = empty(subnetId) ? 'emptySubnetId' : acaEnv.properties.vnetConfiguration.infrastructureSubnetId
 // output vnetConfiguration (object | null) = acaEnv.properties.vnetConfiguration
-output vnetConfigurationIf object = empty(subnetId) ? {} : {
+output vnetConfigurationIf object = empty(subnetId) ? {
+  infrastructureSubnetId: 'emptySubnetId'
+  internal: true
+} : {
   infrastructureSubnetId: subnetId
   internal: true
 }
