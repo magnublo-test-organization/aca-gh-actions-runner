@@ -77,5 +77,4 @@ jobs:
             runnerLabels=${{ inputs.runnerLabels }}
             gitHubAppId=${{ vars.GH_APP_ID }}
             keyVaultUrl=${{ inputs.keyVaultUrl }}
-            keyVaultPrivateKeySecretName=${{ inputs.keyVaultPrivateKeySecretName }}
           deploymentName: deploy-aca-gh-runners-app

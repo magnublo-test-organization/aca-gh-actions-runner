@@ -13,7 +13,6 @@ param containerMemory string = '0.5Gi'
 param imageTag string
 param runnerLabelsArg string
 param keyVaultUrl string
-param keyVaultPrivateKeySecretName string
 
 @secure()
 param gitHubAccessToken string
@@ -69,7 +68,7 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
           value: gitHubAccessToken
         }
         {
-          name: keyVaultPrivateKeySecretName
+          name: 'github-app-base64-private-key'
           keyVaultUrl: keyVaultUrl
           identity: acaMsi.id
         }
@@ -134,7 +133,7 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
             }
             {
               name: 'BASE64_PRIVATE_KEY'
-              secretRef: keyVaultPrivateKeySecretName
+              secretRef: 'github-app-base64-private-key'
             }
           ]
         }
