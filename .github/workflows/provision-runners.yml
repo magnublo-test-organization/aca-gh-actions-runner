@@ -13,6 +13,16 @@ on:
         type: string
         default: ''
         required: false
+      keyVaultUrl:
+        description: The URL of the Key Vault containing the GitHub App private key
+        type: string
+        default: ''
+        required: false
+      keyVaultPrivateKeySecretName:
+        description: The name of the secret containing the base64 encoded GitHub App private key
+        type: string
+        default: ''
+        required: false
 
 permissions:
   id-token: write
@@ -65,4 +75,7 @@ jobs:
             gitHubOrganization=${{ github.repository_owner }} 
             useJobs=${{ inputs.useJobs }}
             runnerLabels=${{ inputs.runnerLabels }}
+            gitHubAppId=${{ vars.GH_APP_ID }}
+            keyVaultUrl=${{ inputs.keyVaultUrl }}
+            keyVaultPrivateKeySecretName=${{ inputs.keyVaultPrivateKeySecretName }}
           deploymentName: deploy-aca-gh-runners-app

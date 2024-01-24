@@ -62,5 +62,6 @@ jobs:
           GITHUB_TOKEN: ${{ steps.generate-access-token.outputs.token }}
 
       - run: |
-          az acr build -r ${{ steps.bicep-deploy.outputs.acrName }} -g ${{ steps.bicep-deploy.outputs.rgName }} -f src/Dockerfile.from-base -t runners/github/linux:from-base src
+          az acr build -r ${{ steps.bicep-deploy.outputs.acrName }} -g ${{ steps.bicep-deploy.outputs.rgName }} -f src/runner-image/Dockerfile.from-base -t runners/github/linux:from-base src/runner-image
+          az acr build -r ${{ steps.bicep-deploy.outputs.acrName }} -g ${{ steps.bicep-deploy.outputs.rgName }} -f src/token-generator/Dockerfile -t github-token-generator src/token-generator
         name: Build and push runner image to the registry

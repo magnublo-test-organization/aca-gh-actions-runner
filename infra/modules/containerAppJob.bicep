@@ -12,10 +12,13 @@ param containerCpu string = '0.25'
 param containerMemory string = '0.5Gi'
 param imageTag string
 param runnerLabelsArg string
+param keyVaultUrl string
+param keyVaultPrivateKeySecretName string
 
 @secure()
 param gitHubAccessToken string
 param gitHubOrganization string
+param gitHubAppId string
 
 resource acr 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
   name: acrName
@@ -65,6 +68,10 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
           name: 'github-access-token'
           value: gitHubAccessToken
         }
+        {
+          name: keyVaultPrivateKeySecretName
+          keyVaultUrl: keyVaultUrl
+        }
       ]
       replicaTimeout: 1800
       triggerType: 'Event'
@@ -90,8 +97,55 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
       }
     }
     template: {
+      volumes: [
+        {
+          name: 'shared'
+          storageType: 'EmptyDir'
+        }
+      ]
+      initContainers: [
+        {
+          name: 'get-github-token'
+          image: '${acr.properties.loginServer}/github-token-generator'
+          resources: {
+            cpu: json(containerCpu)
+            memory: containerMemory
+          }
+          command: [
+            '/bin/sh'
+            '-c'
+            'jwt encode --exp=600 --iss \${GH_APP_ID} --secret b64:\${BASE64_PRIVATE_KEY} > \${TOKEN_FILE}'
+          ]
+          volumeMounts: [
+            {
+              volumeName: 'shared'
+              mountPath: '/mnt/shared'
+            }
+          ]
+          env: [
+            {
+              name: 'TOKEN_FILE'
+              value: '/mnt/shared/token.jwt'
+            }
+            {
+              name: 'GH_APP_ID'
+              value: gitHubAppId
+            }
+            {
+              name: 'BASE64_PRIVATE_KEY'
+              secretRef: keyVaultPrivateKeySecretName
+            }
+          ]
+        }
+      ]
       containers: [
         {
+          volumeMounts: [
+            {
+              volumeName: 'shared'
+              mountPath: '/mnt/shared'
+            }
+          ]
           name: 'github-runner'
           image: '${acr.properties.loginServer}/runners/github/linux:${imageTag}'
           resources: {
@@ -100,8 +154,8 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
           }
           env: [
             {
-              name: 'ACCESS_TOKEN'
-              secretRef: 'github-access-token'
+              name: 'TOKEN_FILE'
+              value: '/mnt/shared/token.jwt'
             }
             {
               name: 'RUNNER_SCOPE'
