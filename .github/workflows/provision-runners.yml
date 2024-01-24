@@ -8,6 +8,11 @@ on:
         type: boolean
         default: true
         required: true
+      runnerLabels:
+        description: Optional, comma separated list of labels to add to the runner. These labels are referenced in the 'runs-on' section of the workflow file
+        type: string
+        default: ''
+        required: false
 
 permissions:
   id-token: write
@@ -59,4 +64,5 @@ jobs:
             gitHubAccessToken=${{ steps.generate-access-token.outputs.token }} 
             gitHubOrganization=${{ github.repository_owner }} 
             useJobs=${{ inputs.useJobs }}
+            runnerLabels=${{ inputs.runnerLabels }}
           deploymentName: deploy-aca-gh-runners-app

@@ -10,6 +10,9 @@ param gitHubAccessToken string
 param gitHubOrganization string
 
 param useJobs bool = true
+param runnerLabels string
+
+var runnerLabelsArg = empty(runnerLabels) ? '' : '--labels ${runnerLabels}'
 
 module acj '../modules/containerAppJob.bicep' = if (useJobs) {
   name: 'deploy-${project}-acj'
@@ -22,6 +25,7 @@ module acj '../modules/containerAppJob.bicep' = if (useJobs) {
     location: location
     project: project
     tags: union(resourceGroup().tags, { module: 'containerAppJob.bicep' })
+    runnerLabelsArg: runnerLabelsArg
   }
 }
 
@@ -36,5 +40,6 @@ module aca '../modules/containerApp.bicep' = if (!useJobs) {
     location: location
     project: project
     tags: union(resourceGroup().tags, { module: 'containerApp.bicep' })
+    runnerLabelsArg: runnerLabelsArg
   }
 }
