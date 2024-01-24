@@ -106,7 +106,7 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
       initContainers: [
         {
           name: 'get-github-token'
-          image: '${acr.properties.loginServer}/github-token-generator'
+          image: '${acr.properties.loginServer}/github-token-generator:latest'
           resources: {
             cpu: json(containerCpu)
             memory: containerMemory
