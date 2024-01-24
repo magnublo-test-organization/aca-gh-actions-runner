@@ -71,6 +71,7 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
         {
           name: keyVaultPrivateKeySecretName
           keyVaultUrl: keyVaultUrl
+          identity: acaMsi.id
         }
       ]
       replicaTimeout: 1800
