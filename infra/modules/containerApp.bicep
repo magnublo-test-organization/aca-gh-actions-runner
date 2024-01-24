@@ -11,6 +11,7 @@ param containerCpu string = '0.25'
 @allowed([ '0.5Gi', '1.0Gi', '1.5Gi', '2.0Gi', '2.5Gi', '3.0Gi', '3.5Gi', '4.0Gi' ])
 param containerMemory string = '0.5Gi'
 param imageTag string
+param runnerLabelsArg string
 
 @secure()
 param gitHubAccessToken string
@@ -105,6 +106,10 @@ resource acaApp 'Microsoft.App/containerApps@2023-05-01' = {
             {
               name: 'RUNNER_NAME_PREFIX'
               value: project
+            }
+            {
+              name: 'RUNNER_LABELS'
+              value: runnerLabelsArg
             }
           ]
         }
