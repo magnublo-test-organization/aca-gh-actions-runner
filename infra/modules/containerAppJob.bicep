@@ -18,6 +18,7 @@ param keyVaultUrl string
 param gitHubAccessToken string
 param gitHubOrganization string
 param gitHubAppId string
+param gitHubAppInstallationId string
 
 resource acr 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
   name: acrName
@@ -68,7 +69,7 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
           value: gitHubAccessToken
         }
         {
-          name: 'github-app-base64-private-key'
+          name: 'github-app-private-key'
           keyVaultUrl: keyVaultUrl
           identity: acaMsi.id
         }
@@ -83,13 +84,15 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
               type: 'github-runner'
               auth: [
                 {
-                  triggerParameter: 'personalAccessToken'
-                  secretRef: 'github-access-token'
+                  triggerParameter: 'appKey'
+                  secretRef: 'github-app-private-key'
                 }
               ]
               metadata: {
                 owner: gitHubOrganization
                 runnerScope: 'org'
+                applicationId: gitHubAppId
+                installationId: gitHubAppInstallationId
               }
             }
           ]
@@ -111,11 +114,6 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
             cpu: json(containerCpu)
             memory: containerMemory
           }
-          // command: [
-          //   '/bin/sh'
-          //   '-c'
-          //   'jwt encode --exp=600 --iss \${GH_APP_ID} --secret b64:\${BASE64_PRIVATE_KEY} > \${TOKEN_FILE}'
-          // ]
           volumeMounts: [
             {
               volumeName: 'shared'
@@ -132,8 +130,8 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
               value: gitHubAppId
             }
             {
-              name: 'BASE64_PRIVATE_KEY'
-              secretRef: 'github-app-base64-private-key'
+              name: 'GH_APP_PRIVATE_KEY'
+              secretRef: 'github-app-private-key'
             }
           ]
         }
@@ -185,6 +183,10 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
             {
               name: 'RUNNER_LABELS'
               value: runnerLabelsArg
+            }
+            {
+              name: 'GH_APP_INSTALLATION_ID'
+              value: gitHubAppInstallationId
             }
           ]
         }

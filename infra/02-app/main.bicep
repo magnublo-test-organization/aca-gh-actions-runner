@@ -9,6 +9,7 @@ param imageTag string
 param gitHubAccessToken string
 param gitHubOrganization string
 param gitHubAppId string
+param gitHubAppInstallationId string
 param keyVaultUrl string
 
 param useJobs bool = true
@@ -29,6 +30,7 @@ module acj '../modules/containerAppJob.bicep' = if (useJobs) {
     tags: union(resourceGroup().tags, { module: 'containerAppJob.bicep' })
     runnerLabelsArg: runnerLabelsArg
     gitHubAppId: gitHubAppId
+    gitHubAppInstallationId: gitHubAppInstallationId
     keyVaultUrl: keyVaultUrl
   }
 }
