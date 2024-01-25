@@ -1,0 +1,38 @@
+# This workflow builds a Dockerfile without pushing it to a registry
+name: Build GH Image
+
+on:
+#   push:
+#     branches:
+#       - main
+  workflow_dispatch:
+
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+#   ARG RUNNER_VERSION
+#   ARG HOST_MOUNT_PATH
+#   ARG UBUNTU_VERSION
+            - name: Find prerequisites
+              run: |
+                source /etc/os-release
+                echo UBUNTU_VERSION=$VERSION_ID >> $GITHUB_ENV
+                RUNNER_VERSION=$(curl -sL https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name' | cut -c 2-)
+                echo "RUNNER_VERSION=$RUNNER_VERSION" >> $GITHUB_ENV
+                dpkg-query -f '${binary:Package}=${Version}\n' -W > $GITHUB_WORKSPACE/packages_list.txt
+                echo "packages to install:"
+                cat $GITHUB_WORKSPACE/packages_list.txt
+
+            - name: Build Docker image
+              run: |
+                docker build -f src/runner-image/Dockerfile.copy-github \
+                    --build-arg RUNNER_VERSION=$RUNNER_VERSION \
+                    --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
+                    --build-arg HOST_MOUNT_PATH=$GITHUB_WORKSPACE/packages_list.txt \
+                    src/runner-image
+
