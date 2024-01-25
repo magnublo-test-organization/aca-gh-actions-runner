@@ -8,16 +8,6 @@ on:
         type: string
         default: ""
         required: false
-      resourceGroupName:
-        description: Resource group name for the stack
-        type: string
-        default: "stratus-alz-mgmt-gh-runners"
-        required: true
-      subscriptionId:
-        description: Subscription ID for the stack
-        type: string
-        default: "00000000-0000-0000-0000-000000000000"
-        required: true
 
 permissions:
   id-token: write
@@ -54,7 +44,7 @@ jobs:
           parameters: >
             location=${{ vars.AZURE_LOCATION }}
             subnetId=${{ github.event.inputs.containerAppEnvSubnetId }}
-            resourceGroupName=${{ inputs.resourceGroupName }}
+            resourceGroupName=${{ vars.RG_NAME }}
           deploymentName: deploy-aca-gh-runners-dev-prerequisites
 
       - name: Generate access token
