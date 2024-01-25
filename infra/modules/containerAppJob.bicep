@@ -77,10 +77,10 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
               name: 'github-runner-scaling-rule'
               type: 'github-runner'
               auth: [
-                // {
-                //   triggerParameter: 'appKey' // maybe remove
-                //   secretRef: 'github-app-private-key'
-                // }
+                {
+                  triggerParameter: 'appKey' // maybe remove
+                  secretRef: 'github-app-private-key'
+                }
                 {
                   triggerParameter: 'applicationKey'
                   secretRef: 'github-app-private-key'
@@ -89,8 +89,8 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
               metadata: {
                 owner: gitHubOrganization
                 runnerScope: 'org'
-                // applicationId: gitHubAppId
-                // installationId: gitHubAppInstallationId
+                applicationId: gitHubAppId
+                installationId: gitHubAppInstallationId
                 applicationID: gitHubAppId
                 installationID: gitHubAppInstallationId
               }
