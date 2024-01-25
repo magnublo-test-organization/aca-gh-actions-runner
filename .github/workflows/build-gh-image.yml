@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-    package_file_path: ${{ github.workspace }}/src/runner-image/packages_list.txt    
+    build_context_path: ${{ github.workspace }}/src/runner-image
 
 jobs:
     build:
@@ -26,15 +26,15 @@ jobs:
                 echo UBUNTU_VERSION=$VERSION_ID >> $GITHUB_ENV
                 RUNNER_VERSION=$(curl -sL https://api.github.com/repos/actions/runner/releases/latest | jq -r '.tag_name' | cut -c 2-)
                 echo "RUNNER_VERSION=$RUNNER_VERSION" >> $GITHUB_ENV
-                dpkg-query -f '${binary:Package}=${Version}\n' -W > $package_file_path
+                dpkg-query -f '${binary:Package}=${Version}\n' -W > $build_context_path/packages.txt
                 echo "packages to install:"
-                cat $package_file_path
+                cat $build_context_path/packages.txt
 
             - name: Build Docker image
               run: |
                 docker build -f src/runner-image/Dockerfile.copy-github \
                     --build-arg RUNNER_VERSION=$RUNNER_VERSION \
                     --build-arg UBUNTU_VERSION=$UBUNTU_VERSION \
-                    --build-arg HOST_MOUNT_PATH=$package_file_path \
-                    src/runner-image
+                    --build-arg HOST_MOUNT_PATH=packages.txt \
+                    $build_context_path
 
