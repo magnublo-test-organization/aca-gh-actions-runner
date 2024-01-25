@@ -51,7 +51,7 @@ jobs:
         id: generate-access-token
         run: |
           echo "${{ secrets.GH_APP_PRIVATE_KEY }}" > /tmp/private-key.pem
-          gh_app_token=$(jwt encode --exp=$(($(date +%s)+600)) --alg RS256 --iss ${GH_APP_ID} --secret @/tmp/private-key.pem)
+          gh_app_token=$(jwt encode --exp=$(($(date +%s)+600)) --alg RS256 --iss ${{ vars.GH_APP_ID }} --secret @/tmp/private-key.pem)
           rm /tmp/private-key.pem
 
           installation_id=$(curl --fail -X GET \
