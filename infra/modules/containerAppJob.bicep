@@ -12,11 +12,12 @@ param containerCpu string = '0.25'
 param containerMemory string = '0.5Gi'
 param imageTag string
 param runnerLabelsArg string
-param keyVaultUrl string
 
 param gitHubOrganization string
 param gitHubAppId string
 param gitHubAppInstallationId string
+@secure()
+param gitHubAppPrivateKey string
 
 resource acr 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
   name: acrName
@@ -64,8 +65,7 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
       secrets: [
         {
           name: 'github-app-private-key'
-          keyVaultUrl: keyVaultUrl
-          identity: acaMsi.id
+          value: gitHubAppPrivateKey
         }
       ]
       replicaTimeout: 1800
@@ -77,10 +77,10 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
               name: 'github-runner-scaling-rule'
               type: 'github-runner'
               auth: [
-                {
-                  triggerParameter: 'appKey' // maybe remove
-                  secretRef: 'github-app-private-key'
-                }
+                // {
+                //   triggerParameter: 'appKey' // maybe remove
+                //   secretRef: 'github-app-private-key'
+                // }
                 {
                   triggerParameter: 'applicationKey'
                   secretRef: 'github-app-private-key'
@@ -89,8 +89,8 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
               metadata: {
                 owner: gitHubOrganization
                 runnerScope: 'org'
-                applicationId: gitHubAppId
-                installationId: gitHubAppInstallationId
+                // applicationId: gitHubAppId
+                // installationId: gitHubAppInstallationId
                 applicationID: gitHubAppId
                 installationID: gitHubAppInstallationId
               }

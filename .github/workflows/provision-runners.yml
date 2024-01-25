@@ -13,11 +13,6 @@ on:
         type: string
         default: ''
         required: false
-      keyVaultUrl:
-        description: The URL of the Key Vault containing the GitHub App private key
-        type: string
-        default: ''
-        required: false
 
 permissions:
   id-token: write
@@ -91,15 +86,14 @@ jobs:
           resourceGroupName: ${{ vars.RG_NAME }}
           template: ./infra/02-app/main.bicep
           parameters: >
-            project=${{ vars.PROJECT }} 
-            acrName=${{ vars.ACR_NAME }} 
+            project=${{ vars.PROJECT }}
+            acrName=${{ vars.ACR_NAME }}
             acaEnvName=${{ vars.ACA_ENV_NAME }} 
             imageTag=from-base
             gitHubAccessToken=${{ steps.generate-access-token.outputs.token }} 
-            gitHubOrganization=${{ github.repository_owner }} 
+            gitHubOrganization=${{ github.repository_owner }}
             useJobs=${{ inputs.useJobs }}
             runnerLabels=${{ inputs.runnerLabels }}
             gitHubAppId=${{ vars.GH_APP_ID }}
             gitHubAppInstallationId=${{ steps.generate-access-token.outputs.installation_id }} 
-            keyVaultUrl=${{ inputs.keyVaultUrl }}
           deploymentName: deploy-aca-gh-runners-app

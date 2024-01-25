@@ -30,7 +30,6 @@ module acj '../modules/containerAppJob.bicep' = if (useJobs) {
     runnerLabelsArg: runnerLabelsArg
     gitHubAppId: gitHubAppId
     gitHubAppInstallationId: gitHubAppInstallationId
-    keyVaultUrl: keyVaultUrl
   }
 }
 
