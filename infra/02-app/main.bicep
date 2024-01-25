@@ -22,7 +22,6 @@ module acj '../modules/containerAppJob.bicep' = if (useJobs) {
   params: {
     acaEnvironmentName: acaEnvName
     acrName: acrName
-    gitHubAccessToken: gitHubAccessToken
     gitHubOrganization: gitHubOrganization
     imageTag: imageTag
     location: location

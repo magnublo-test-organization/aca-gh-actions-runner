@@ -14,8 +14,6 @@ param imageTag string
 param runnerLabelsArg string
 param keyVaultUrl string
 
-@secure()
-param gitHubAccessToken string
 param gitHubOrganization string
 param gitHubAppId string
 param gitHubAppInstallationId string
@@ -65,10 +63,6 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
       ]
       secrets: [
         {
-          name: 'github-access-token'
-          value: gitHubAccessToken
-        }
-        {
           name: 'github-app-private-key'
           keyVaultUrl: keyVaultUrl
           identity: acaMsi.id
@@ -84,7 +78,11 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
               type: 'github-runner'
               auth: [
                 {
-                  triggerParameter: 'appKey'
+                  triggerParameter: 'appKey' // maybe remove
+                  secretRef: 'github-app-private-key'
+                }
+                {
+                  triggerParameter: 'applicationKey'
                   secretRef: 'github-app-private-key'
                 }
               ]
@@ -93,6 +91,8 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
                 runnerScope: 'org'
                 applicationId: gitHubAppId
                 installationId: gitHubAppInstallationId
+                applicationID: gitHubAppId
+                installationID: gitHubAppInstallationId
               }
             }
           ]
