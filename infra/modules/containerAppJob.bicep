@@ -111,11 +111,11 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
             cpu: json(containerCpu)
             memory: containerMemory
           }
-          command: [
-            '/bin/sh'
-            '-c'
-            'jwt encode --exp=600 --iss \${GH_APP_ID} --secret b64:\${BASE64_PRIVATE_KEY} > \${TOKEN_FILE}'
-          ]
+          // command: [
+          //   '/bin/sh'
+          //   '-c'
+          //   'jwt encode --exp=600 --iss \${GH_APP_ID} --secret b64:\${BASE64_PRIVATE_KEY} > \${TOKEN_FILE}'
+          // ]
           volumeMounts: [
             {
               volumeName: 'shared'

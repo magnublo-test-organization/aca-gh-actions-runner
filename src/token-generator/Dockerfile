@@ -14,3 +14,5 @@ RUN apt update && apt install curl -y && \
 
 FROM debian:bookworm-slim AS runner
 COPY --from=base /usr/local/bin/jwt /usr/local/bin/jwt
+COPY start.sh start.sh
+ENTRYPOINT ["./start.sh"]
