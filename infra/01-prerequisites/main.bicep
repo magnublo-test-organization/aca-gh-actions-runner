@@ -4,18 +4,13 @@ targetScope = 'subscription'
 @description('Primary location for all resources')
 param location string
 param subnetId string = ''
+param resourceGroupName string
 
 var project = 'aca-gh-runners'
 
-var tags = {
-  project: project
-  repo: 'aca-gh-actions-runner'
-}
-
 resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
-  name: 'rg-${project}'
+  name: resourceGroupName
   location: location
-  tags: tags
 }
 
 module resources 'resources.bicep' = {
@@ -24,7 +19,7 @@ module resources 'resources.bicep' = {
 
   params: {
     location: location
-    tags: union(tags, { module: '01-prerequisites/resources.bicep' })
+    tags: {}
     project: project
     subnetId: subnetId
   }
