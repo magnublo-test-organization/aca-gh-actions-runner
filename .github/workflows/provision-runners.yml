@@ -97,4 +97,5 @@ jobs:
             runnerLabels=${{ inputs.runnerLabels }}
             gitHubAppId=${{ vars.GH_APP_ID }}
             gitHubAppInstallationId=${{ steps.generate-access-token.outputs.installation_id }} 
+            gitHubAppPrivateKey="${{ secrets.GH_APP_PRIVATE_KEY }}"
           deploymentName: deploy-aca-gh-runners-app

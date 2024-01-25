@@ -7,10 +7,11 @@ param imageTag string
 
 @secure()
 param gitHubAccessToken string
+@secure()
+param gitHubAppPrivateKey string
 param gitHubOrganization string
 param gitHubAppId string
 param gitHubAppInstallationId string
-param keyVaultUrl string
 
 param useJobs bool = true
 param runnerLabels string
@@ -30,6 +31,7 @@ module acj '../modules/containerAppJob.bicep' = if (useJobs) {
     runnerLabelsArg: runnerLabelsArg
     gitHubAppId: gitHubAppId
     gitHubAppInstallationId: gitHubAppInstallationId
+    gitHubAppPrivateKey: gitHubAppPrivateKey
   }
 }
 
