@@ -11,7 +11,7 @@ RUN --mount=type=bind,source=${HOST_MOUNT_PATH},target=/package_list.txt \
     DEBIAN_FRONTEND=noninteractive apt update -y && \
     apt upgrade -y && \
     useradd -m docker && \
-    cat /package_list.txt | xargs sudo apt install -y
+    cat /package_list.txt | xargs apt install -y
 
 
 # install python and the packages the your code depends on along with jq so we can parse JSON
