@@ -93,6 +93,8 @@ resource acaJob 'Microsoft.App/jobs@2023-05-01' = {
                 installationId: gitHubAppInstallationId
                 applicationID: gitHubAppId
                 installationID: gitHubAppInstallationId
+                githubAPIURL: 'https://api.github.com'
+                targetWorkflowQueueLength: 1
               }
             }
           ]
